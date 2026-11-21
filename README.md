@@ -94,9 +94,6 @@ SupplySight/
 ├── .gitignore
 └── README.md
 ```
-
-*The structure represents the intended project organization; update filenames as modules are implemented.*
-
 ---
 
 ## 📈 Key Performance Indicators (KPIs)

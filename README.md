@@ -57,45 +57,6 @@ Key dataset information:
 
 ---
 
-## 📁 Project Structure
-
-```text
-SupplySight/
-│
-├── data/
-│   ├── raw/
-│   └── processed/
-│
-├── notebooks/
-│   ├── 01_data_cleaning.ipynb
-│   ├── 02_eda.ipynb
-│   ├── 03_sales_analysis.ipynb
-│   ├── 04_logistics_analysis.ipynb
-│   ├── 05_profitability_analysis.ipynb
-│   ├── 06_demand_forecasting.ipynb
-│   └── 07_inventory_planning.ipynb
-│
-├── sql/
-│   ├── schema.sql
-│   ├── data_validation.sql
-│   └── business_analysis.sql
-│
-├── src/
-│   ├── forecasting/
-│   ├── inventory/
-│   └── optimization/
-│
-├── dashboard/
-│   └── SupplySight.pbix
-│
-├── reports/
-│
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
----
-
 ## 📈 Key Performance Indicators (KPIs)
 
 The project aims to track the following supply chain KPIs:

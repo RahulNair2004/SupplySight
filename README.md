@@ -16,7 +16,6 @@ The project combines **Python, SQL (PostgreSQL), Exploratory Data Analysis, Mach
 - Analyze shipping performance, delivery delays, and logistics bottlenecks.
 - Develop demand forecasting models to anticipate future product demand.
 - Build inventory planning strategies to improve stock management.
-- Explore logistics optimization techniques to improve operational efficiency.
 - Develop interactive dashboards for monitoring key supply chain KPIs.
 
 ---

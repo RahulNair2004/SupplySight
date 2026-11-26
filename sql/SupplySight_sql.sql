@@ -49,3 +49,76 @@ Select
 	round(sum("Order Item Discount")::numeric,2) as total_discount_amount
 From dataco
 
+-- 5. Customer & Order Performance
+/* Find the top 10 customers based on total revenue.
+Display their customer ID.
+Calculate their total revenue.
+Calculate their total profit.
+Calculate their total number of unique orders.
+Calculate their average order value. */
+
+Select 
+	"Customer Id",
+	round((Sum("Sales")::numeric),2) as total_revenue,
+	round((Sum("Order Profit Per Order")::numeric),2) as total_profit,
+	Count(Distinct "Order Id") as total_unique_orders,
+	round((Sum("Sales") / Count(Distinct "Order Id"))::numeric,2) as avg_order_value
+from dataco 
+group by "Customer Id"
+order by total_revenue  desc
+LIMIT 10
+
+-- 6. Monthly Sales and Profit Analysis
+/* Calculate monthly total revenue.
+Calculate monthly total profit.
+Calculate the number of unique orders per month.
+Calculate monthly profit margin percentage.
+Display results in chronological order. */
+
+Select
+	Date_Trunc('month',TO_timestamp("order date (DateOrders)",'MM/DD/YYYY HH24:MI')) as order_month,
+	round(SUM("Sales")::numeric,2) as monthly_total_revenue,
+	round(sum("Order Profit Per Order")::numeric,2) as monthly_total_profit,
+	count(Distinct "Order Id") as unique_orders,
+	round(((sum("Order Profit Per Order") / Nullif(sum("Sales"),0))*100)::numeric,2) as profit_margin_percentage
+from dataco
+group by 1 
+order by order_month asc
+
+-- 7. Month-over-Month Revenue Growth
+/* Calculate total monthly revenue.
+Display the previous month's revenue.
+Calculate the absolute change in revenue.
+Calculate month-over-month revenue growth percentage.
+Identify months where revenue declined. */
+
+WITH monthly_sales AS (
+    SELECT 
+        DATE_TRUNC('month', TO_TIMESTAMP("order date (DateOrders)", 'MM/DD/YYYY HH24:MI')) AS order_month,
+        SUM("Sales") AS total_revenue
+    FROM dataco
+    GROUP BY 1
+)
+SELECT 
+    order_month,
+    ROUND(total_revenue::numeric, 2) AS monthly_total_revenue,
+    ROUND(LAG(total_revenue) OVER (ORDER BY order_month ASC)::numeric, 2) AS previous_month_revenue,
+    ROUND((total_revenue - LAG(total_revenue) OVER (ORDER BY order_month ASC))::numeric, 2) AS absolute_change,
+    ROUND((((total_revenue - LAG(total_revenue) OVER (ORDER BY order_month ASC)) / NULLIF(LAG(total_revenue) OVER (ORDER BY order_month ASC), 0)) * 100)::numeric, 2) AS mom_growth_percentage,
+    CASE 
+        WHEN total_revenue < LAG(total_revenue) OVER (ORDER BY order_month ASC) THEN 'Declined'
+        WHEN LAG(total_revenue) OVER (ORDER BY order_month ASC) IS NULL THEN 'First Month'
+        ELSE 'Increased / Flat'
+    END AS revenue_status
+FROM monthly_sales
+ORDER BY order_month ASC;
+
+-- 8. Yearly Business Performance
+/*  Year
+	Total revenue
+	Total profit
+	Unique orders
+	Unique customers
+	Average order value
+	Profit margin percentage */
+

@@ -122,3 +122,23 @@ ORDER BY order_month ASC;
 	Average order value
 	Profit margin percentage */
 
+WITH yearly_metrics AS (
+    SELECT 
+        EXTRACT(YEAR FROM TO_TIMESTAMP("order date (DateOrders)", 'MM/DD/YYYY HH24:MI'))::INT AS order_year,
+        SUM("Sales") AS total_revenue,
+        SUM("Order Profit Per Order") AS total_profit,
+        COUNT(DISTINCT "Order Id") AS unique_orders,
+        COUNT(DISTINCT "Customer Id") AS unique_customers
+    FROM dataco
+    GROUP BY 1
+)
+SELECT 
+    order_year,
+    ROUND(total_revenue::numeric, 2) AS total_revenue,
+    ROUND(total_profit::numeric, 2) AS total_profit,
+    unique_orders,
+    unique_customers,
+    ROUND((total_revenue / NULLIF(unique_orders, 0))::numeric, 2) AS average_order_value,
+    ROUND(((total_profit / NULLIF(total_revenue, 0)) * 100)::numeric, 2) AS profit_margin_percentage
+FROM yearly_metrics
+ORDER BY order_year ASC;
